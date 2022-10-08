@@ -41,6 +41,11 @@ public class Users implements Serializable {
         users.add(user);
     }
 
+    /**
+     * Remove a user from the list of users, based on the provided username
+     * The username of each user is unique, so there cannot be inconsistencies
+     * @param user user to remove
+     */
     synchronized public void remove(UserBean user) {
         Optional<UserBean> toRemove = users.stream().filter(u -> {
             return Objects.equals(u.getUsername(), user.getUsername());
@@ -48,12 +53,8 @@ public class Users implements Serializable {
         toRemove.ifPresent(userBean -> users.remove(userBean));
     }
 
-    public List<UserBean> getUsers() {
+    synchronized public List<UserBean> getUsers() {
         return users;
-    }
-
-    synchronized  public void setUsers(List<UserBean> users) {
-        this.users = users;
     }
 
     @Override

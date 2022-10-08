@@ -5,6 +5,11 @@ import it.unitn.disi.webarch.lucademenego.assignment2.utils.Pair;
 import java.io.Serializable;
 import java.util.*;
 
+/**
+ * JavaBean containing all information userful for the flags game
+ * In particular, it exposes a set of predefined flags and the flagsToGuess,
+ * which can be randomly generated using randomizeFlagsToGuess()
+ */
 public class FlagsBean implements Serializable {
     private List<Pair<String, String>> flagsToGuess;
 
@@ -30,7 +35,7 @@ public class FlagsBean implements Serializable {
         random = new Random();
     }
 
-    private void randomizeFlagsToGuess() {
+    synchronized private void randomizeFlagsToGuess() {
         List<Pair<String, String>> clonedFlags = new ArrayList<>(flags);
         Collections.shuffle(clonedFlags);
         flagsToGuess.clear();
@@ -39,14 +44,24 @@ public class FlagsBean implements Serializable {
         }
     }
 
-    public List<Pair<String, String>> getFlagsToGuess() {
+    synchronized public List<Pair<String, String>> getFlagsToGuess() {
         return flagsToGuess;
     }
 
-    public List<Pair<String, String>> getFlags() {
+    synchronized public void setFlagsToGuess(List<Pair<String, String>> flagsToGuess) {
+        this.flagsToGuess = flagsToGuess;
+    }
+
+    synchronized public List<Pair<String, String>> getFlags() {
         return flags;
     }
 
+    /**
+     * Generate the list of flags in basic HTML format
+     * @param stylesEven CSS styles (in form of Tailwind classes) to use when the flag is even
+     * @param stylesOdd CSS styles (in form of Tailwind classes) to use when the flag is odd
+     * @return HTML code to embed in the page
+     */
     public String flagsListToHTML(String stylesEven, String stylesOdd) {
         String result = "";
         for (int i = 0; i < this.flags.size(); i++) {
@@ -58,6 +73,13 @@ public class FlagsBean implements Serializable {
         return result;
     }
 
+    /**
+     * Generate the list of flags to guess in basic HTML format
+     * @param stylesEven CSS styles (in form of Tailwind classes) to use when the flag is even
+     * @param stylesOdd CSS styles (in form of Tailwind classes) to use when the flag is odd
+     * @param stylesInput CSS styles (in form of Tailwind classes) for the input field
+     * @return HTML code to embed in the page
+     */
     public String guessListToHTML(String stylesEven, String stylesOdd, String stylesInput) {
         randomizeFlagsToGuess();
         String result = "";

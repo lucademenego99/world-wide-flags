@@ -1,33 +1,32 @@
 package it.unitn.disi.webarch.lucademenego.assignment2.model;
 
-import java.sql.Timestamp;
 import java.util.Objects;
 
 /**
- * Class following the DAO architectural patten, exposing methods
- * to access the users saved in the storage.
- * The class is a singleton: its constructor is protected, and the servlets
- * will only get access to it by using the "getInstance" function. In this way,
- * one only instance of it will be actually used among all the requests.
+ * Class exposing methods to interact with the users' information
  */
-public class UserDAO {
-    private UserDAO() {}
+public class UserService {
+    private UserService() {}
 
     /**
      * Perform the login
      *
      * @param username user's username
      * @param password user's password
-     * @param users
+     * @param users data source containing the information about the users
      * @return null if the user is found, otherwise the User itself
      */
     public static UserBean login(String username, String password, UsersBean users) {
 
         for (UserBean user : users.getAllUsers().getUsers()) {
             if (Objects.equals(user.getUsername(), username) && Objects.equals(user.getPassword(), password)) {
-                user.setLastAccess(new Timestamp(System.currentTimeMillis()));
-                if (!users.getActiveUsers().getUsers().contains(user))
+                // Reset the score of the user
+                user.setScore(0);
+
+                // Add the user to the active ones
+                if (!users.getActiveUsers().getUsers().contains(user)) {
                     users.addActiveUser(user);
+                }
                 return user;
             }
         }
@@ -38,7 +37,9 @@ public class UserDAO {
      * Create a new user
      * @param username user's username
      * @param password user's password
+     * @param users data source containing the information about the users
      * @throws Exception the parameters are not correct or there was an error creating the user
+     * @return the newly created user
      */
     public static UserBean signup(String username, String password, UsersBean users) throws Exception {
         if (username.isEmpty() || password.isEmpty()) {
@@ -60,16 +61,11 @@ public class UserDAO {
         user.setPassword(password);
         user.setIsAdmin(false);
         user.setScore(0);
-        user.setLastAccess(new Timestamp(System.currentTimeMillis()));
 
         if (!users.getActiveUsers().getUsers().contains(user))
             users.addActiveUser(user);
         users.addUser(user);
 
         return user;
-    }
-
-    public static void setAccess(UserBean user) {
-        user.setLastAccess(new Timestamp(System.currentTimeMillis()));
     }
 }

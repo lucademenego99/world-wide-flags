@@ -1,15 +1,12 @@
 package it.unitn.disi.webarch.lucademenego.assignment2.controller;
 
 import it.unitn.disi.webarch.lucademenego.assignment2.model.UserBean;
-import it.unitn.disi.webarch.lucademenego.assignment2.model.UserDAO;
+import it.unitn.disi.webarch.lucademenego.assignment2.model.UserService;
 import it.unitn.disi.webarch.lucademenego.assignment2.model.UsersBean;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -33,6 +30,7 @@ public class SignUp extends HttpServlet {
         String pwd = request.getParameter("password");
         String repeatedPwd = request.getParameter("repeat-password");
 
+        // Check that the two passwords match
         if (!Objects.equals(pwd, repeatedPwd)) {
             request.setAttribute("error", "The passwords do not match");
             request.getRequestDispatcher("/WEB-INF/signup.jsp").forward(request, response);
@@ -51,7 +49,7 @@ public class SignUp extends HttpServlet {
                 return;
             }
 
-            UserBean user = UserDAO.signup(username, pwd, usersBean);
+            UserBean user = UserService.signup(username, pwd, usersBean);
 
             HttpSession session = request.getSession();
             session.setMaxInactiveInterval(usersBean.getSessionTimeout());

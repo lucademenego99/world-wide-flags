@@ -14,8 +14,22 @@ import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**
+ * Listen to the servlet context
+ * When the servlet context is initialized, get the environment variables and read the file containing
+ * all information about the users, saving it into the UsersBean.
+ *
+ * When the servlet context is destroyed, save all the information about the users in the same file
+ */
 public class WWFServletContextListener implements ServletContextListener {
+    /**
+     * Path to the file containing information about the users, exposed as env variable
+     */
     private String dataSource;
+
+    /**
+     * The number of seconds each session can last
+     */
     private Integer sessionTimeout;
 
     @Override
@@ -62,7 +76,7 @@ public class WWFServletContextListener implements ServletContextListener {
             admin.setUsername(adminUsername);
             admin.setPassword(adminPassword);
             admin.setIsAdmin(true);
-            admin.setScore(999);
+            admin.setScore(0);
             usersBean.addUser(admin);
             usersBean.setSessionTimeout(sessionTimeout);
 

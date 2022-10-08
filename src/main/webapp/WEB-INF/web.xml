@@ -14,6 +14,12 @@
         </listener-class>
     </listener>
 
+    <listener>
+        <listener-class>
+            it.unitn.disi.webarch.lucademenego.assignment2.controller.WWFSessionListener
+        </listener-class>
+    </listener>
+
     <env-entry>
         <env-entry-name>UsersPath</env-entry-name>
         <env-entry-type>java.lang.String</env-entry-type>
@@ -23,7 +29,7 @@
     <env-entry>
         <env-entry-name>SessionTimeout</env-entry-name>
         <env-entry-type>java.lang.Integer</env-entry-type>
-        <env-entry-value>180</env-entry-value>
+        <env-entry-value>300</env-entry-value>
     </env-entry>
 
     <env-entry>
@@ -39,13 +45,13 @@
     </env-entry>
 
     <filter>
-        <filter-name>AdminAuthFilter</filter-name>
-        <filter-class>it.unitn.disi.webarch.lucademenego.assignment2.filter.AdminAuthFilter</filter-class>
+        <filter-name>LogFilter</filter-name>
+        <filter-class>it.unitn.disi.webarch.lucademenego.assignment2.filter.LogFilter</filter-class>
     </filter>
 
     <filter-mapping>
-        <filter-name>AdminAuthFilter</filter-name>
-        <url-pattern>/admin/*</url-pattern>
+        <filter-name>LogFilter</filter-name>
+        <url-pattern>/*</url-pattern>
     </filter-mapping>
 
     <filter>
@@ -59,12 +65,14 @@
     </filter-mapping>
 
     <filter>
-        <filter-name>LogFilter</filter-name>
-        <filter-class>it.unitn.disi.webarch.lucademenego.assignment2.filter.LogFilter</filter-class>
+        <filter-name>AdminAuthFilter</filter-name>
+        <filter-class>it.unitn.disi.webarch.lucademenego.assignment2.filter.AdminAuthFilter</filter-class>
     </filter>
 
     <filter-mapping>
-        <filter-name>LogFilter</filter-name>
-        <url-pattern>/*</url-pattern>
+        <filter-name>AdminAuthFilter</filter-name>
+        <url-pattern>/admin/*</url-pattern>
     </filter-mapping>
+
+
 </web-app>

@@ -1,14 +1,10 @@
 package it.unitn.disi.webarch.lucademenego.assignment2.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.stream.Collectors;
 
 /**
  * Java Bean containing all information about the webapp's users
- * A normal user will only make use of the variable "user",
- * while an administrator will also have access to "allUsers".
+ * The class exposes both all the available users and the currently active users
  */
 public class UsersBean implements Serializable {
     /**
@@ -31,25 +27,19 @@ public class UsersBean implements Serializable {
         activeUsers = new Users();
     }
 
-    public Users getAllUsers() {
+    synchronized public Users getAllUsers() {
         return allUsers;
     }
 
-    public Users getActiveUsers() {
-        ArrayList<UserBean> filteredUsers = (ArrayList<UserBean>) activeUsers.getUsers().stream().filter(u -> {
-            return (new Date(u.getLastAccess().getTime()).toInstant().plusSeconds(sessionTimeout).isAfter(new Date().toInstant()));
-        }).collect(Collectors.toList());
-
-        activeUsers.setUsers(filteredUsers);
-
+    synchronized public Users getActiveUsers() {
         return activeUsers;
     }
 
-    public Integer getSessionTimeout() {
+    synchronized public Integer getSessionTimeout() {
         return sessionTimeout;
     }
 
-    public void setSessionTimeout(Integer sessionTimeout) {
+    synchronized public void setSessionTimeout(Integer sessionTimeout) {
         this.sessionTimeout = sessionTimeout;
     }
 
@@ -57,14 +47,26 @@ public class UsersBean implements Serializable {
         this.allUsers = allUsers;
     }
 
+    /**
+     * Add a new user to the list of users
+     * @param user the new user to add
+     */
     synchronized public void addUser(UserBean user) {
         allUsers.add(user);
     }
 
+    /**
+     * Add a new user to the list of active users
+     * @param user the new user to add
+     */
     synchronized public void addActiveUser(UserBean user) {
         activeUsers.add(user);
     }
 
+    /**
+     * Remove a user from the list of active users
+     * @param user the user to remove
+     */
     synchronized public void removeActiveUser(UserBean user) {
         activeUsers.remove(user);
     }

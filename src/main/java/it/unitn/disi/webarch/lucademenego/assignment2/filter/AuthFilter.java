@@ -1,7 +1,5 @@
 package it.unitn.disi.webarch.lucademenego.assignment2.filter;
 
-import it.unitn.disi.webarch.lucademenego.assignment2.model.UserBean;
-import it.unitn.disi.webarch.lucademenego.assignment2.model.UserDAO;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,9 +20,9 @@ public class AuthFilter implements Filter {
         HttpSession session = hreq.getSession(false);
 
         if (session == null || session.getAttribute("auth") == null || !Boolean.parseBoolean(session.getAttribute("auth").toString()) ) {
+            // If the user is not logged in, redirect to the login page
             ((HttpServletResponse) response).sendRedirect(hreq.getContextPath() +  "/login");
         } else {
-            UserDAO.setAccess((UserBean) session.getAttribute("user"));
             // Pass request back down the filter chain
             chain.doFilter(request,response);
         }
